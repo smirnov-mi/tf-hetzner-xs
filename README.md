@@ -30,5 +30,11 @@ export TF_VAR_hcloud_token=<your-api-token>
 terraform init  # Initialize the Terraform working directory
 terraform plan  # Preview the changes Terraform will make
 terraform apply # Apply the configuration and create the resources
-
 ```
+
+run 
+```bash
+terraform output -json server_public_ips | jq -r '.[]'
+```
+
+to see all installed servers' IPs

@@ -46,16 +46,5 @@ resource "hcloud_server" "ubuntu_server" {
     "muscat-server" = "true"
   }
 
-#  # Outputs public IPs
-#  dynamic "network_interface" {
-#    for_each = length(var.network_interfaces) > 0 ? var.network_interfaces : []
-#    content {
-#      ipv4_address = network_interface.value.ipv4_address
-#    }
-#  }
 }
-
-#output "server_public_ips" {
-#  value = hcloud_server.ubuntu_server[*].ipv4_address
-#}
 

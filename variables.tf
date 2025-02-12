@@ -1,6 +1,7 @@
 variable "hcloud_token" {
-  description = "Hetzner Cloud API token"
   type        = string
+  description = "The API token for Hetzner Cloud"
+  sensitive   = true
 }
 
 variable "server_type" {

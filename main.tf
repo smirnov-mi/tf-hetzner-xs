@@ -1,5 +1,21 @@
+terraform {
+  required_providers {
+    hcloud = {
+      source = "hetznercloud/hcloud"
+      version = ">= 1.35.0" # Optional, can specify the version you want
+    }
+  }
+  required_version = ">= 1.0.0"
+}
+
 provider "hcloud" {
-  token = var.hcloud_token
+  token = var.hcloud_token # Ensure that this variable is set
+}
+
+# Create the SSH key on Hetzner
+resource "hcloud_ssh_key" "init_key" {
+  name       = "init-key"
+  public_key = file("~/.ssh/id_ed25519.pub")  # Path to your public key (ensure the correct path)
 }
 
 resource "hcloud_server" "ubuntu_server" {
@@ -9,8 +25,9 @@ resource "hcloud_server" "ubuntu_server" {
   image       = "ubuntu-24.04"
   server_type = var.server_type
   location    = var.location
+  ssh_keys    = [hcloud_ssh_key.init_key.id]
 
-  ssh_keys = [file("~/.ssh/id_ed25519.pub")]  # Use your SSH key for authorization
+#  ssh_keys = [file("~/.ssh/id_ed25519.pub")]  # Use your SSH key for authorization
 
   # Cloud-init configuration to create "muscat" user with sudo privileges
   user_data = <<-EOF
@@ -25,18 +42,20 @@ resource "hcloud_server" "ubuntu_server" {
     disable_root: true
   EOF
 
-  tags = ["muscat-server"]
-
-  # Outputs public IPs
-  dynamic "network_interface" {
-    for_each = length(var.network_interfaces) > 0 ? var.network_interfaces : []
-    content {
-      ipv4_address = network_interface.value.ipv4_address
-    }
+  labels = {
+    "muscat-server" = "true"
   }
+
+#  # Outputs public IPs
+#  dynamic "network_interface" {
+#    for_each = length(var.network_interfaces) > 0 ? var.network_interfaces : []
+#    content {
+#      ipv4_address = network_interface.value.ipv4_address
+#    }
+#  }
 }
 
-output "server_public_ips" {
-  value = hcloud_server.ubuntu_server[*].ipv4_address
-}
+#output "server_public_ips" {
+#  value = hcloud_server.ubuntu_server[*].ipv4_address
+#}
 

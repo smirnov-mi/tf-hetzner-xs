@@ -19,7 +19,7 @@ resource "hcloud_ssh_key" "init_key" {
 }
 
 resource "hcloud_server" "ubuntu_server" {
-  count = 2
+  count = 3
 
   name        = "server-${count.index + 1}"
   image       = "ubuntu-24.04"
@@ -47,4 +47,6 @@ resource "hcloud_server" "ubuntu_server" {
   }
 
 }
+
+
 

@@ -13,7 +13,7 @@ variable "server_type" {
 variable "location" {
   description = "Location of the server (default: nbg1)"
   type        = string
-  default     = "nbg1"
+  default     = "hel1"
 }
 
 variable "network_interfaces" {
